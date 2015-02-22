@@ -2,7 +2,7 @@ var chai = require('chai').should();
 var java = require('java');
 var path = require('path');
 var recursive = require('recursive-readdir');
-
+var repository;
 describe('Jackrabbit oak test', function(){
 
 
@@ -24,8 +24,8 @@ describe('Jackrabbit oak test', function(){
 
   });
 
-  it('Should connect to jackrabbit', function(done){
 
+  before(function(){
     var MongoClientURI = java.import('com.mongodb.MongoClientURI');
     var MongoConnection = java.import('org.apache.jackrabbit.oak.plugins.document.util.MongoConnection');
     var NodeStore = java.import('org.apache.jackrabbit.oak.spi.state.NodeStore');
@@ -48,7 +48,7 @@ describe('Jackrabbit oak test', function(){
     var nodeStore = new Builder()
                         .setMongoDBSync(mongo.getDBSync())
                         .getNodeStoreSync();
-    var repository =new Oak(nodeStore)                    
+    repository =new Oak(nodeStore)
                         .withSync(new DefaultEditor())     // automatically set default types
                         .withSync(new NameValidatorProvider()) // allow only valid JCR names
                         .withSync(new SecurityProviderImpl())  // use the default security
@@ -56,9 +56,22 @@ describe('Jackrabbit oak test', function(){
                         .createContentRepositorySync();
 
 
+  });
 
-    done();
+  it('Should get repository root path', function(){
+    var ContentSession = java.import('org.apache.jackrabbit.oak.api.ContentSession');
 
+    var SimpleCredentials = java.import('javax.jcr.SimpleCredentials');
+    var admin = ['a','d','m','i','n'];
+    var password = java.newArray('char', admin);
+    var credentials = new SimpleCredentials('admin', password);
+
+    var session = repository.loginSync(credentials, null);
+    var treePath = '/';
+    var tree = session.getLatestRootSync().getTreeSync(treePath);
+    tree.getPathSync().should.be.equals(treePath);
+    console.log('The tree path is', tree.getPathSync());
+    session.close();
   });
 
 
