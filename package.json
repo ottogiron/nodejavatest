@@ -1,0 +1,32 @@
+{
+  "name": "nodejava",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --timeout 5000"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-java-maven": "0.0.5",
+    "recursive-readdir": "^1.2.1"
+  },
+  "java": {
+    "dependencies": [
+      {
+        "groupId": "org.apache.jackrabbit",
+        "artifactId": "oak-core",
+        "version": "1.0.8"
+      },
+      {
+        "groupId": "com.google.guava",
+        "artifactId": "guava",
+        "version": "18.0"
+      }
+    ]
+  }
+}
